@@ -1,0 +1,11 @@
+<Solution>
+  <Project Path="TaskManagement.API.Tests/TaskManagement.API.Tests.csproj" />
+  <Project Path="TaskManagement.API/TaskManagement.API.csproj" />
+  <Project Path="TaskManagement.Bootstrap/TaskManagement.Bootstrap.csproj" />
+  <Project Path="TaskManagement.Application.Tests/TaskManagement.Application.Tests.csproj" />
+  <Project Path="TaskManagement.Application/TaskManagement.Application.csproj" />
+  <Project Path="TaskManagement.Domain.Tests/TaskManagement.Domain.Tests.csproj" />
+  <Project Path="TaskManagement.Domain/TaskManagement.Domain.csproj" />
+  <Project Path="TaskManagement.Infrastructure.Tests/TaskManagement.Infrastructure.Tests.csproj" />
+  <Project Path="TaskManagement.Infrastructure/TaskManagement.Infrastructure.csproj" />
+</Solution>

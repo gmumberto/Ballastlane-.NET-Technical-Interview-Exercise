@@ -1,0 +1,37 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SQL_SA_PASSWORD:?Set SQL_SA_PASSWORD in .env}
+      MSSQL_PID: Developer
+    volumes:
+      - sql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/1433' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=TaskManagementDb;User Id=sa;Password=${SQL_SA_PASSWORD:?Set SQL_SA_PASSWORD};Encrypt=True;TrustServerCertificate=True"
+      Jwt__Issuer: TaskManagement.API
+      Jwt__Audience: TaskManagement.Client
+      Jwt__Key: ${JWT_KEY_BASE64:?Set JWT_KEY_BASE64}
+      Demo__Enabled: "true"
+      Demo__Email: ${DEMO_EMAIL:-demo@example.com}
+      Demo__Password: ${DEMO_PASSWORD:?Set DEMO_PASSWORD}
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+volumes:
+  sql-data:

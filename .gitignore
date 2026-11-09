@@ -1,0 +1,49 @@
+# Visual Studio / IDE
+.vs/
+*.user
+*.suo
+*.rsuser
+*.userosscache
+*.sln.docstates
+.idea/
+.vscode/
+
+# .NET build outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+
+# Test results and coverage
+TestResults/
+*.trx
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+
+# NuGet generated artifacts
+*.nupkg
+*.snupkg
+packages/
+!packages/build/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+**/appsettings.Development.local.json
+**/appsettings.Local.json
+**/secrets.json
+
+# Frontend (if added later)
+node_modules/
+dist/
+build/
+
+# OS temporary files
+Thumbs.db
+.DS_Store
+*.tmp
+*.log
