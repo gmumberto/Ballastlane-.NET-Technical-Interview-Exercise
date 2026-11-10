@@ -2,8 +2,6 @@
 
 A RESTful task-management API built with **ASP.NET Core / .NET 10**, **C#**, **Entity Framework Core**, and **SQL Server**. It provides JWT authentication and user-scoped task management, including pagination, filtering, and sorting. The solution separates HTTP concerns, application use cases, domain entities, infrastructure adapters, and dependency composition.
 
-> **Documentation baseline:** This README reflects the latest available project archive (`TaskManagement-result-pattern-completo.zip`) and the subsequent fixes discussed for `DevelopmentSeeder.cs` and the controllers' response content types. Those fixes must be present in your working tree. The complete solution has not been compiled or tested in this environment. GitHub Actions / CI is a planned next step, **not yet included**.
-
 ## Features
 
 - Registration and login with JWT Bearer (HS256) authentication
