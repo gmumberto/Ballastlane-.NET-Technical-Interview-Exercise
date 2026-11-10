@@ -96,10 +96,7 @@ TaskManagement.API/                         # Solution root
 ├── Dockerfile
 ├── compose.yaml
 ├── .dockerignore
-├── .env.example
-├── ARCHITECTURE-REFACTOR.md
-├── IMPLEMENTATION-STAGES-1-3.md
-└── RESULT-PATTERN-REFACTOR.md
+└── .env.example
 ```
 
 ### Architectural responsibilities and dependencies
@@ -325,7 +322,6 @@ The repository includes Domain, Application, Infrastructure, and API test projec
 - **Deterministic pagination:** a secondary ID sort stabilizes rows with equal primary sort values; offset pagination can still shift under concurrent writes.
 - **Developer experience:** Swagger, XML comments, optional demo data, and Docker Compose simplify local evaluation.
 - **Security boundaries:** demo seeding and Swagger UI are Development-only; Docker Compose is a local demonstration setup.
-- **CI status:** GitHub Actions / automated CI **has not yet been implemented**. It is the planned next phase.
 - **Verification status:** The archived source and subsequent user-reported fixes informed this README; a complete build/test/container verification of the final working tree is still required.
 
 ## License
