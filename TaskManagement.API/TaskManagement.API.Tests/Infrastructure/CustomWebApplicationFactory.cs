@@ -15,6 +15,9 @@ public class CustomWebApplicationFactory
 {
     private SqliteConnection? _connection;
 
+    private readonly string _databaseName =
+        $"TaskManagementTests_{Guid.NewGuid():N}";
+
     private const string TestJwtKey =
         "VGhpcy1pcy1hLXRlc3Qta2V5LWZvci1KV1QtYXV0aC0yMDI2LXNlY3VyZQ==";
 
@@ -23,35 +26,31 @@ public class CustomWebApplicationFactory
     {
         builder.UseEnvironment("Testing");
 
-        builder.UseSetting(
-            "Jwt:Issuer",
-            "TaskManagement.Tests");
-
-        builder.UseSetting(
-            "Jwt:Audience",
-            "TaskManagement.Tests.Client");
-
-        builder.UseSetting(
-            "Jwt:Key",
-            TestJwtKey);
+        builder.UseSetting("Jwt:Issuer", "TaskManagement.Tests");
+        builder.UseSetting("Jwt:Audience", "TaskManagement.Tests.Client");
+        builder.UseSetting("Jwt:Key", TestJwtKey);
 
         builder.ConfigureTestServices(services =>
         {
-            // Remove the original SQL Server DbContext registration.
             services.RemoveAll<DbContextOptions<AppDbContext>>();
             services.RemoveAll<IDbContextOptionsConfiguration<AppDbContext>>();
             services.RemoveAll<AppDbContext>();
 
-            // Create a dedicated in-memory SQLite connection.
-            _connection = new SqliteConnection(
-                "Data Source=:memory:");
+            var connectionString = new SqliteConnectionStringBuilder
+            {
+                DataSource = _databaseName,
+                Mode = SqliteOpenMode.Memory,
+                Cache = SqliteCacheMode.Shared
+            }.ToString();
 
+            // Keep the in-memory database alive throughout the test.
+            _connection = new SqliteConnection(connectionString);
             _connection.Open();
 
-            // Register AppDbContext using SQLite only.
+            // Each DbContext uses its own database connection.
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlite(_connection);
+                options.UseSqlite(connectionString);
             });
         });
     }

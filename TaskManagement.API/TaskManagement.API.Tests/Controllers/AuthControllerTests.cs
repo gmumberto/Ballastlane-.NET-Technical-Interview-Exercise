@@ -203,6 +203,7 @@ public class AuthControllerTests : IDisposable
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
+
     [Fact]
     public async Task Register_WithConcurrentDuplicateEmail_ShouldCreateOnlyOneUser()
     {
@@ -214,14 +215,29 @@ public class AuthControllerTests : IDisposable
             _client.PostAsJsonAsync("/api/auth/register", request),
             _client.PostAsJsonAsync("/api/auth/register", request));
 
-        // Assert
-        Assert.Single(
-            responses,
-            response => response.StatusCode == HttpStatusCode.Created);
+        var responseDetails = await Task.WhenAll(
+            responses.Select(async response =>
+            {
+                var body = await response.Content.ReadAsStringAsync();
 
-        Assert.Single(
-            responses,
-            response => response.StatusCode == HttpStatusCode.Conflict);
+                return $"HTTP {(int)response.StatusCode} " +
+                       $"{response.StatusCode}: {body}";
+            }));
+
+        var diagnostics = string.Join(
+            Environment.NewLine,
+            responseDetails);
+
+        // Assert
+        Assert.True(
+            responses.Count(response =>
+                response.StatusCode == HttpStatusCode.Created) == 1,
+            $"Expected exactly one 201 Created.{Environment.NewLine}{diagnostics}");
+
+        Assert.True(
+            responses.Count(response =>
+                response.StatusCode == HttpStatusCode.Conflict) == 1,
+            $"Expected exactly one 409 Conflict.{Environment.NewLine}{diagnostics}");
 
         using var scope = _factory.Services.CreateScope();
 
@@ -233,6 +249,7 @@ public class AuthControllerTests : IDisposable
 
         Assert.Equal(1, count);
     }
+
 
     [Fact]
     public async Task Register_WithDuplicateEmail_ShouldReturnProblemDetails()
